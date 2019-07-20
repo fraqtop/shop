@@ -2,38 +2,26 @@
 
 namespace app\models;
 
-class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
+use yii\db\ActiveRecord;
+use yii\filters\RateLimitInterface;
+use yii\web\IdentityInterface;
+
+class User extends ActiveRecord implements IdentityInterface, RateLimitInterface
 {
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
+    private $rateLimit = 2;
+    private $secondsLimit = 20;
 
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
-
+    public static function tableName()
+    {
+        return 'users';
+    }
 
     /**
      * {@inheritdoc}
      */
     public static function findIdentity($id)
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        return static::findOne(['id' => $id]);
     }
 
     /**
@@ -41,30 +29,7 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Finds user by username
-     *
-     * @param string $username
-     * @return static|null
-     */
-    public static function findByUsername($username)
-    {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
-
-        return null;
+        return static::findOne(['accessToken' => $token]);
     }
 
     /**
@@ -101,4 +66,27 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     {
         return $this->password === $password;
     }
+
+    public function getRateLimit($request, $action)
+    {
+        return [$this->rateLimit, $this->secondsLimit];
+    }
+
+    public function loadAllowance($request, $action)
+    {
+        $session = \Yii::$app->session;
+        return [$session['limitCounter'], $session['time']];
+    }
+
+    public function saveAllowance($request, $action, $allowance, $timestamp)
+    {
+        $session = \Yii::$app->session;
+        if (!$session->isActive) {
+            $session->open();
+        }
+        $session['limitCounter'] = $allowance;
+        $session['time'] = $timestamp;
+    }
+
+
 }

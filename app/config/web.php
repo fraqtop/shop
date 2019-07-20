@@ -25,6 +25,7 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
+            'enableSession' => false
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -54,6 +55,12 @@ $config = [
                 ['class' => yii\rest\UrlRule::class, 'controller' => 'country'],
                 ['class' => yii\rest\UrlRule::class, 'controller' => 'manufacturer'],
                 ['class' => yii\rest\UrlRule::class, 'controller' => 'product'],
+                [
+                    'class' => \yii\rest\UrlRule::class,
+                    'controller' => 'user',
+                    'except' => ['index'],
+                    'extraPatterns' => ['POST login' => 'login']
+                ],
             ],
         ],
     ],

@@ -1,7 +1,6 @@
 <?php
 
 use yii\db\Migration;
-use app\models\Country;
 
 /**
  * Handles the creation of table `{{%countries}}`.

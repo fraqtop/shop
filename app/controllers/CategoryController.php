@@ -4,9 +4,8 @@ namespace app\controllers;
 
 
 use app\models\Category;
-use yii\rest\ActiveController;
 
-class CategoryController extends ActiveController
+class CategoryController extends BearerController
 {
     public $modelClass = Category::class;
 }

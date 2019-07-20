@@ -4,9 +4,8 @@ namespace app\controllers;
 
 
 use app\models\Country;
-use yii\rest\ActiveController;
 
-class CountryController extends ActiveController
+class CountryController extends BearerController
 {
     public $modelClass = Country::class;
 }

@@ -21,6 +21,7 @@ services:
       - ./app:/var/www/html
     links:
       - database
+      - redis-server
     user: 1000:1000
 
   database:
@@ -29,6 +30,10 @@ services:
       - 5432:5432
     volumes:
       - ./db/data:/var/lib/postgresql/data
+
+  redis-server:
+    image: redis:latest
+
 
   adminer:
     image: adminer

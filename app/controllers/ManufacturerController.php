@@ -4,9 +4,8 @@ namespace app\controllers;
 
 
 use app\models\Manufacturer;
-use yii\rest\ActiveController;
 
-class ManufacturerController extends ActiveController
+class ManufacturerController extends BearerController
 {
     public $modelClass = Manufacturer::class;
 }
