@@ -47,19 +47,28 @@ $config = [
             ],
         ],
         'db' => $db,
+        'authManager' => [
+            'class' => \yii\rbac\DbManager::class
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
                 ['class' => yii\rest\UrlRule::class, 'controller' => 'category'],
                 ['class' => yii\rest\UrlRule::class, 'controller' => 'country'],
-                ['class' => yii\rest\UrlRule::class, 'controller' => 'manufacturer'],
+                [
+                    'class' => yii\rest\UrlRule::class,
+                    'controller' => 'manufacturer',
+                ],
                 ['class' => yii\rest\UrlRule::class, 'controller' => 'product'],
                 [
                     'class' => \yii\rest\UrlRule::class,
                     'controller' => 'user',
                     'except' => ['index'],
-                    'extraPatterns' => ['POST login' => 'login']
+                    'extraPatterns' => [
+                        'POST login' => 'login',
+                        'GET me' => 'profile'
+                    ]
                 ],
             ],
         ],

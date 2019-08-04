@@ -1,9 +1,13 @@
 version: "3"
+networks:
+  main:
+    driver: bridge
+
 services:
   nginx:
     image: nginx:latest
     ports:
-      - 8090:80
+      - 8000:80
     volumes:
       - ./nginx/logs:/etc/logs/nginx
       - ./app:/var/www/html
@@ -11,31 +15,55 @@ services:
     environment:
       - NGINX_HOST=localhost
       - NGINX_PORT=80
-    links:
-      - php
     command: nginx -g "daemon off;"
+    networks:
+      main:
+        aliases:
+            - nginx
 
   php:
     image: fraqtop/fpm-postgres
     volumes:
       - ./app:/var/www/html
-    links:
-      - database
-      - redis-server
     user: 1000:1000
+    networks:
+      main:
+        aliases:
+            - php
 
   database:
     image: postgres:latest
-    ports:
-      - 5432:5432
     volumes:
       - ./db/data:/var/lib/postgresql/data
+    networks:
+      main:
+        aliases:
+          - database
 
   redis-server:
     image: redis:latest
-
+    networks:
+      main:
+        aliases:
+          - redis-server
 
   adminer:
     image: adminer
     ports:
+      - 3456:3456
+    networks:
+      main:
+
+  front:
+    image: node:lts-alpine
+    user: 'node'
+    working_dir: /home/node/app
+    volumes:
+      - ./frontend:/home/node/app
+    command: npm start
+    ports:
       - 8080:8080
+    networks:
+      main:
+        aliases:
+          - front

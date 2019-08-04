@@ -7,9 +7,10 @@ namespace app\controllers;
 use app\models\User;
 use yii\base\Module;
 use app\services\UserService;
+use yii\web\ErrorAction;
 use yii\web\NotFoundHttpException;
 
-class UserController extends BearerController
+class UserController extends ApiController
 {
     private $users;
     public $modelClass = User::class;
@@ -32,6 +33,11 @@ class UserController extends BearerController
             return ['access_token' => $token];
         }
         return new NotFoundHttpException();
+    }
+
+    public function actionProfile()
+    {
+        return \Yii::$app->user->identity;
     }
 
     public function __construct(string $id, Module $module, UserService $userService, array $config = [])

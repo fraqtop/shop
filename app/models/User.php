@@ -29,7 +29,8 @@ class User extends ActiveRecord implements IdentityInterface, RateLimitInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        return static::findOne(['accessToken' => $token]);
+        $user = static::findOne(['accessToken' => $token]);
+        return $user;
     }
 
     /**
