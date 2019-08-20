@@ -7,7 +7,7 @@ use app\models\Manufacturer;
 use yii\data\ActiveDataProvider;
 use yii\rest\ActiveController;
 
-class ManufacturerController extends ActiveController
+class ManufacturerController extends ApiController
 {
     public $modelClass = Manufacturer::class;
 

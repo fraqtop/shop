@@ -7,7 +7,6 @@ namespace app\controllers;
 use app\models\User;
 use yii\base\Module;
 use app\services\UserService;
-use yii\web\ErrorAction;
 use yii\web\NotFoundHttpException;
 
 class UserController extends ApiController

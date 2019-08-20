@@ -11,4 +11,11 @@ class Category extends ActiveRecord
     {
         return 'categories';
     }
+
+    public function rules()
+    {
+        return [
+            ['name', 'required']
+        ];
+    }
 }

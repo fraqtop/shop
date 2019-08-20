@@ -5,6 +5,7 @@
                 v-for="manufacturer in manufacturers"
                 v-bind:key="manufacturer.id"
                 :to="{name: 'products', params: {id: manufacturer.id}}"
+                class="mr-3"
         >
             {{manufacturer.name}} from {{manufacturer.country}}
         </router-link>
@@ -17,22 +18,22 @@ export default {
     name: "Index",
     data: function () {
         return {
-            manufacturers: null
+            manufacturers: null,
         }
     },
     created: function () {
         this.getManufacturers()
     },
-    methods:{
+    methods: {
         getManufacturers() {
-            axios('http://localhost:8000/manufacturers')
+            this.$http(`${this.$config.getDomain()}/manufacturers`)
                 .then(response => {
                     this.manufacturers = response.data
                 })
                 .catch(error => {
-                    console.log(error.message)
+                    console.log(error.response)
                 })
-        }
+        },
     }
 }
 </script>

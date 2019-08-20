@@ -15,13 +15,16 @@ class ApiController extends ActiveController
         $behaviors['corsFilter'] = [
             'class' => \yii\filters\Cors::class,
             'cors' => [
-                'Origin' => ['*'],
+                'Origin' => ['0.0.0.0:8000'],
                 'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
                 'Access-Control-Allow-Credentials' => true,
             ],
 
         ];
-//        $behaviors['authenticator'] = ['class' => HttpBearerAuth::class];
+        $behaviors['authenticator'] = [
+            'class' => HttpBearerAuth::class,
+            'except' => ['options']
+            ];
         return $behaviors;
     }
 }
