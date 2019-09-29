@@ -10,7 +10,8 @@ services:
       - 8000:80
     volumes:
       - ./nginx/logs:/etc/logs/nginx
-      - ./app:/var/www/html
+      - ./app:/web/backend
+      - ./frontend:/web/frontend
       - ./nginx/conf:/etc/nginx/conf.d
     environment:
       - NGINX_HOST=localhost
@@ -24,12 +25,19 @@ services:
   php:
     image: fraqtop/fpm-postgres
     volumes:
-      - ./app:/var/www/html
+      - ./app:/web/backend
     user: 1000:1000
     networks:
       main:
         aliases:
             - php
+
+  composer:
+    image: composer
+    working_dir: /web/backend
+    volumes:
+      - ./app:/web/backend
+    command: composer update
 
   database:
     image: postgres:latest
@@ -47,20 +55,13 @@ services:
         aliases:
           - redis-server
 
-  adminer:
-    image: adminer
-    ports:
-      - 3456:8080
-    networks:
-      main:
-
   front:
     image: node:lts-alpine
     user: 'node'
-    working_dir: /home/node/app
+    working_dir: /web/frontend
     volumes:
-      - ./frontend:/home/node/app
-    command: npm start
+      - ./frontend:/web/frontend
+    command: sh -c "npm i && npm run build && npm run dev"
     ports:
       - 8080:8080
     networks:

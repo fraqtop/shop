@@ -13,28 +13,31 @@ const router = new Router({
     {
       path: '/',
       name: 'index',
-      component: Index
+      component: Index,
+      meta: {layout: 'app-layout'}
     },
     {
       path: '/products/:id',
       name: 'products',
       component: Products,
-      props: true
+      props: true,
+      meta: {layout: 'app-layout'}
     },
-      {
-          path: '/login',
-          name: 'login',
-          component: Login
-      }
+    {
+      path: '/login',
+      name: 'login',
+      component: Login,
+      meta: {layout: 'common-layout'}
+    }
   ]
 });
 
 router.beforeEach((to, from, next) => {
-    if (store.getters.isLoggedIn || to.path === '/login') {
-        next()
-    } else {
-        next('/login')
-    }
+  if (store.getters.isLoggedIn || to.path === '/login') {
+    next()
+  } else {
+    next('/login')
+  }
 });
 
 export default router

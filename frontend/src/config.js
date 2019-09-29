@@ -1,5 +1,6 @@
+import env from './env'
+
 export default {
-    getDomain() {
-        return 'http://localhost:8000'
-    }
+  allManufacturers: `${env.domain}/manufacturers`,
+  authenticate: `${env.domain}/users/login`
 }

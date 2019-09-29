@@ -12,6 +12,18 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+        'response' => [
+            'on beforeSend' => function ($event) {
+                $event->sender->headers->add('Access-Control-Allow-Origin', '*');
+                $event->sender->headers->add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, HEAD, OPTIONS');
+                $event->sender->headers->add('Access-Control-Allow-Headers', 'Content-Type, session-token, Authorization, tz');
+                $event->sender->headers->add('Access-Control-Expose-Headers', 'Content-Type, session-token');
+                if (Yii::$app->request->isOptions) {
+                    $event->sender->statusCode = 204;
+                }
+            },
+            'format' => yii\web\Response::FORMAT_JSON
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'PhB7J31VQ6UcAmjKu6OWnT9K0gO9GIK4',
